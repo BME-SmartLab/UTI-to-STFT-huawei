@@ -12,7 +12,7 @@ model = Model(device_id, model_path, 64, 128)
 n_lines = 64
 n_pixels_reduced = 128
 ult_data = np.fromfile('20180223_spkr048_1432.ult128', dtype='uint8')
-ult_data = ult_data.reshape(ult_data, (-1, n_lines, n_pixels_reduced))
+ult_data = np.reshape(ult_data, (-1, n_lines, n_pixels_reduced))
 
 # restructure input data to 3 channels
 ult_data_3d = np.empty((len(ult_data), n_lines, n_pixels_reduced, 3), dtype='uint8')
