@@ -58,3 +58,5 @@ atc --model=./UTI_to_STFT_CNN_model.pb \
 ```python3 UTI_to_STFT_huawei.py```
 
 result: mel-spectrogram
+
+<img src="melspec_pred_all_1432.png"  alt="melspec" >
