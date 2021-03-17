@@ -14,7 +14,10 @@ def get_model_output_by_index(model_output, i):
     acl.rt.memcpy(output_host, infer_output_size, infer_output_ptr,
                           infer_output_size, ACL_MEMCPY_DEVICE_TO_HOST)
 
-    return acl.util.ptr_to_numpy(output_host, (infer_output_size//4,), 11).reshape(-1, 85)
+    # print('csapot', output_host, infer_output_size, temp_output_buf)
+
+    # return acl.util.ptr_to_numpy(output_host, (infer_output_size//4,), 11).reshape(-1, 85)
+    return acl.util.ptr_to_numpy(output_host, (80,), 11).reshape(-1, 80)
 
 def bboxes_iou(boxes1, boxes2):
 

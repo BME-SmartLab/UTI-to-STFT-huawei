@@ -149,20 +149,36 @@ class Model(object):
     def run(self, img):
         
         # img_resized = self.resize_image(img, (self.model_input_width, self.model_input_height))[:, :, ::-1] 
-        img_resized = letterbox_resize(img, self.model_input_width, self.model_input_height)[:, :, ::-1]
+        # img_resized = letterbox_resize(img, self.model_input_width, self.model_input_height)[:, :, ::-1]
+        # img_resized = img / 255
+        img_resized = img
         img_resized = np.ascontiguousarray(img_resized)
+        
+        print('csapot, run', np.min(img_resized), np.max(img_resized), img_resized)
+        
         img_dev_ptr, img_buf_size = self.transfer_img_to_device(img_resized)
 #         print("img_dev_ptr, img_buf_size: ", img_dev_ptr, img_buf_size)
         self._gen_input_dataset(img_dev_ptr, img_buf_size)
+        
+        # csapot
+        # print('csapot', self.input_dataset)
+                
         self.forward()
+        
+        # print('csapot', self.output_data)
+        
         
         ret = acl.rt.free(img_dev_ptr)
         check_ret("acl.rt.free", ret)
         
         pred_sbbox = get_model_output_by_index(self.output_data, 0)
+        print('csapot1', pred_sbbox)
         pred_mbbox = get_model_output_by_index(self.output_data, 1)
+        print('csapot2', pred_mbbox)
         pred_lbbox = get_model_output_by_index(self.output_data, 2)
+        print('csapot3', pred_lbbox)
         
+        '''
         pred_bbox = np.concatenate([pred_sbbox, \
                                     pred_mbbox, \
                                     pred_lbbox], axis=0)
@@ -170,8 +186,10 @@ class Model(object):
         original_image_size = img.shape[:2]
         bboxes = postprocess_boxes(pred_bbox, original_image_size, self.model_input_width, 0.3)
         bboxes = nms(bboxes, 0.45, method='nms')
+        '''
         
-        return bboxes
+        # return bboxes
+        return pred_mbbox
 
     def forward(self):
         print('[Model] execute stage:')
